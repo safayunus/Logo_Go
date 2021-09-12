@@ -1,0 +1,30 @@
+SET LANGUAGE Türkçe
+SELECT     
+USER_.NAME as [Kullanıcı], 
+
+DATENAME(month, INVOICE.DATE_) AS AY,
+
+(CASE 
+WHEN INVOICE.TRCODE=1  	THEN 'Satınalma Faturası'
+WHEN INVOICE.TRCODE=2  	THEN 'Perakende Satış İade Faturası'
+WHEN INVOICE.TRCODE=3  	THEN 'Toptan Satış İade Faturası'
+WHEN INVOICE.TRCODE=4  	THEN 'Alınan Hizmet Faturası'
+WHEN INVOICE.TRCODE=5  	THEN 'Alınan Proforma Faturası'
+WHEN INVOICE.TRCODE=6  	THEN 'Satınalma İade Faturası'
+WHEN INVOICE.TRCODE=7  	THEN 'Perakende Satış Faturası'
+WHEN INVOICE.TRCODE=8  	THEN 'Toptan Satış Faturası'
+WHEN INVOICE.TRCODE=9  	THEN 'Verilen Hizmet Faturası'
+WHEN INVOICE.TRCODE=10  THEN 'Verilen Proforma Faturası'
+WHEN INVOICE.TRCODE=12  THEN 'Alınan Vade Farkı Faturası'
+WHEN INVOICE.TRCODE=13  THEN 'Satınalma Fiyat Farkı Faturası'
+WHEN INVOICE.TRCODE=14  THEN 'Satış Fiyat Farkı Faturası'
+WHEN INVOICE.TRCODE=26  THEN 'Müstahsil Makbuzu' END
+) AS [Fatura Tipi],
+COUNT(*) AS ISLEM_SAYISI
+
+
+FROM   L_CAPIUSER AS USER_
+INNER JOIN LG_060_01_INVOICE  INVOICE ON USER_.NR = INVOICE.CAPIBLOCK_CREATEDBY
+GROUP BY USER_.NAME, DATENAME(month, INVOICE.DATE_),MONTH( INVOICE.DATE_),  INVOICE.TRCODE
+ORDER BY MONTH( INVOICE.DATE_),1
+
